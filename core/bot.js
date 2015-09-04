@@ -88,7 +88,6 @@ Bot.prototype.getBotInventory = function (appId, contextId) {
             self.emit('errors', 'Cannot load inventory');
         }
         var item = [], num = 0;
-        self.emit('debug', fs.writeFileSync("items",JSON.stringify(items)));
         return items;
     });
 };
