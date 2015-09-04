@@ -1,0 +1,2 @@
+# SteamBotManager
+Automated bots cluster
