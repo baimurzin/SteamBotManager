@@ -1,0 +1,15 @@
+{
+  "name": "SteamBotManager",
+  "description": "Automated bots cluster",
+  "version": "0.0.1",
+  "author": "Vladislav Baimurzin <baimurzin.719@gmail.com>",
+  "dependencies": {
+    "colors": "0.x.x",
+    "express": "2.3.x",
+    "optimist": "0.2.x"
+  },
+  "devDependencies": {
+    "vows": "0.5.x"
+  },
+  "engine": "node >= 0.12.x"
+}
