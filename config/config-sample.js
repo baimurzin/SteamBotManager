@@ -2,20 +2,20 @@ var config = {};
 
 config.bots = [
     {
-        "Username":"BOT USERNAME",
-        "Password":"BOT PASSWORD",
-        "DisplayName":"TestBot",
-        "ChatResponse":"Hi there bro",
+        "username":"BOT USERNAME",
+        "password":"BOT PASSWORD",
+        "displayName":"TestBot",
+        "chatResponse":"Hi there bro",
         "logFile": "TestBot.log",
-        "DisplayNamePrefix":"[AutomatedBot] "
+        "displayNamePrefix":"[AutomatedBot] "
     },
     {
-        "Username":"BOT USERNAME",
-        "Password":"BOT PASSWORD",
-        "DisplayName":"TestBot",
-        "ChatResponse":"Hi there bro",
+        "username":"BOT USERNAME",
+        "password":"BOT PASSWORD",
+        "displayName":"TestBot",
+        "chatResponse":"Hi there bro",
         "logFile": "TestBot.log",
-        "DisplayNamePrefix":"[AutomatedBot] "
+        "displayNamePrefix":"[AutomatedBot] "
     }
 ];
 
