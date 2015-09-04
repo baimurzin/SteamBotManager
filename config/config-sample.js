@@ -4,36 +4,18 @@ config.bots = [
     {
         "Username":"BOT USERNAME",
         "Password":"BOT PASSWORD",
-        "ApiKey":"Bot specific apiKey",
         "DisplayName":"TestBot",
         "ChatResponse":"Hi there bro",
         "logFile": "TestBot.log",
-        "BotControlClass": "SteamBot.SimpleUserHandler",
-        "MaximumTradeTime":180,
-        "MaximumActionGap":30,
-        "DisplayNamePrefix":"[AutomatedBot] ",
-        "TradePollingInterval":800,
-        "ConsoleLogLevel":"Success",
-        "FileLogLevel":"Info",
-        "AutoStart": "true",
-        "SchemaLang":"en"
+        "DisplayNamePrefix":"[AutomatedBot] "
     },
     {
         "Username":"BOT USERNAME",
         "Password":"BOT PASSWORD",
-        "ApiKey":"Bot specific apiKey",
         "DisplayName":"TestBot",
         "ChatResponse":"Hi there bro",
         "logFile": "TestBot.log",
-        "BotControlClass": "SteamBot.SimpleUserHandler",
-        "MaximumTradeTime":180,
-        "MaximumActionGap":30,
-        "DisplayNamePrefix":"[AutomatedBot] ",
-        "TradePollingInterval":800,
-        "ConsoleLogLevel":"Success",
-        "FileLogLevel":"Info",
-        "AutoStart": "true",
-        "SchemaLang":"en"
+        "DisplayNamePrefix":"[AutomatedBot] "
     }
 ];
 
