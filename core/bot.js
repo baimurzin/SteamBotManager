@@ -4,11 +4,12 @@ var EventEmitter = require("events").EventEmitter,
     crypto = require('crypto'),
     Steam = require("steam"),
     SteamTradeOffers = require('steam-tradeoffers'),
-    SteamWebLogOn = require('steam-weblogon');
+    SteamWebLogOn = require('steam-weblogon'),
+    q = require('q');
 
     var steamClient = {},
         steamUser = {},
-        offers, steamWebLogOn, botSessionId, botCookie;
+        offers, steamWebLogOn, botSessionId, botCookie, steamTrade;
 
 var Bot = function (commonSteamClient, debug) {
     EventEmitter.call(this);
@@ -58,11 +59,15 @@ Bot.prototype.start = function (config) {
                     botCookie = cookies;
                     offers.setup({
                         sessionId: botSessionId,
-                        webCookie: botCookie
+                        webCookie: botCookie,
+                        APIKey: config.apikey
                     });
                     self.emit('debug', 'cookie configured with session ID: ' + botSessionId + " on bot : " + self._config.username);
                     self.emit('ready');
+
                 });
+                //steamTrade = new Steam.SteamTrading(steamClient);
+
             }
 
         });
@@ -72,6 +77,7 @@ Bot.prototype.start = function (config) {
     }
 };
 
+
 Bot.prototype.stop = function () {
     var self = this;
     self._isRunning = false;
@@ -79,6 +85,7 @@ Bot.prototype.stop = function () {
 
 Bot.prototype.getBotInventory = function (appId, contextId) {
     var self = this;
+    var deferred = q.defer();
     self.emit('debug', botSessionId + "TEST");
     offers.loadMyInventory({
         appId: appId,
@@ -87,10 +94,75 @@ Bot.prototype.getBotInventory = function (appId, contextId) {
         if (err) {
             self.emit('errors', 'Cannot load inventory');
         }
-        var item = [], num = 0;
-        return items;
+        deferred.resolve(items);
     });
+    return deferred.promise;
 };
+
+Bot.prototype.makeOffer = function (options) {
+      offers.makeOffer(options, function (err, response) {
+          if (err) {
+              self.emit('errors', 'Cannot make offer to ' + options.partnerSteamId);
+          }
+          self.emit('debug', 'Trade offer sent');
+      });
+};
+
+//
+Bot.prototype.checkOffers = function () {
+    var self = this;
+    var deferred = q.defer();
+    offers.getOffers({
+        get_received_offers: 1,
+        active_only: 1,
+        time_historical_cutoff: Math.round(Date.now() /1000)
+    }, function (err, body) {
+        if(err){
+            self.emit('debug', "error occured while getting ofers")
+            self.emit('debug', err)
+        }
+        if(body.response.trade_offers_received) {
+            body.response.trade_offers_received.forEach(function (offer) {
+                if (offer.trade_offer_state == 2) {
+                    if (!offer.items_to_give) {
+                        self.emit('debug', 'Trying to get items');
+                        acceptOffer(offer).then(function (err, items) {
+                            if (err) {
+                                self.emit('errors', err);
+                            } else {
+                                self.emit('debug', 'item received');
+                                deferred.resolve(items);
+                            }
+                        });
+                    } else {
+                        declineOffer(offer);
+                        self.emit('debug', "offer declined");
+                    }
+                }
+            })
+        }
+    });
+    return deferred.promise;
+};
+
+function acceptOffer(offer) {
+    console.log('accepting offer');
+    var deferred = q.defer();
+    offers.acceptOffer({tradeOfferId: offer.tradeofferid}, function (err, res) {
+        if (err) {
+            console.log('error accetp' + err)
+        } else {
+            offers.getItems({tradeId:res.tradeid}, function (err, items) {
+                deferred.resolve(err, items);
+            })
+        }
+    });
+    return deferred.promise;
+}
+
+function declineOffer(offer) {
+    offers.declineOffer({tradeOfferId: offer.tradeofferid});
+}
 
 function getSHA(bytes) {
     return crypto.createHash('sha1').update(bytes).digest();
